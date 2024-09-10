@@ -22,9 +22,6 @@ class Manager:
 
         try :
             while flag: #Level Loop
-                #Environment Info - 
-                # How far should Pillars be 
-                # What the height difference of Pillars Should Be
                 info = self.__client.recv(BUFFER_SIZE).decode(ENCODING).split(',')
                 print(f'Client{self.__address} Executing Level-{level} with {info}')
 
@@ -47,7 +44,7 @@ class Manager:
         while True : 
             actionType = self.__client.recv(BUFFER_SIZE).decode(ENCODING)
 
-            if actionType == "Contniue":
+            if actionType == "Continue":
                 action = self.__client.recv(BUFFER_SIZE).decode(ENCODING) #Fetch Action From Client
                 state = environment.update(action) #Update State
                 self.__client.send(state.encode(ENCODING)) #Send Back the New State Info to Client
