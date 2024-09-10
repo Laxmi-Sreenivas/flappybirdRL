@@ -17,9 +17,7 @@ class GUI:
         self.pipe_width = pipe_width #Width of Pipes
         self.ground_level = ground_level #Elevation of Pipes
         self.window_size = window_size  #Window Size
-        self.pipe_info = pipe_info #Pipe Positions
-        self.origin = (10,self.window_size[1]//2) #x-axis origin
-        self.player_pos = self.origin #Actual Position
+        self.origin = [10,self.window_size[1]//2] #x-axis origin
 
         #Importing Images
         self.images  = {}
@@ -37,17 +35,17 @@ class GUI:
         pygame.display.set_caption('Flappy Bird')  #Game Caption
 
         #Display Settings
-        self.update(self.player_pos,self.pipe_info)
+        self.update([10,self.window_size[1]//2],pipe_info)
 
     #Renders Pipes
-    def renderPipes(self):
-        for (xPos,yPos) in self.pipe_info:
+    def renderPipes(self,player_pos,pipe_info):
+        for (xPos,yPos) in pipe_info:
             #Lower Pipe Creation
-            lower_pipe_pos = (xPos-self.player_pos[0],yPos+self.pipe_gap//2) #Relative Position of Lower Pipe
+            lower_pipe_pos = (xPos-player_pos[0],yPos+self.pipe_gap//2) #Relative Position of Lower Pipe
             lower_pipe_size = (self.pipe_width, self.window_size[1] - self.ground_level - lower_pipe_pos[1])
 
             #Upper Pipe Creation
-            upper_pipe_pos = (xPos-self.player_pos[0],0) #Relative Position of Upper Pipe
+            upper_pipe_pos = (xPos-player_pos[0],0) #Relative Position of Upper Pipe
             upper_pipe_size = (self.pipe_width,yPos - self.pipe_gap//2)
 
             #Putting Pipes on Screen
@@ -56,16 +54,12 @@ class GUI:
 
 
     #Updates Screen
-    def update(self,new_player_pos,new_pipe_info):
-        #Updating Positions
-        self.player_pos = new_player_pos 
-        self.pipe_info  = new_pipe_info
-
+    def update(self,player_pos,pipe_info):
         #Putting Objects on Screen
         self.window.blit(pygame.transform.scale(self.images["background"], self.window_size),(0,0)) #BackGround
         self.window.blit(pygame.transform.scale(self.images["base"],(self.window_size[0],self.ground_level)),(0,self.window_size[1]-self.ground_level)) #Base
-        self.window.blit(self.images['birdUpFlap'], self.origin) #Bird  
-        self.renderPipes() #Pipes
+        self.window.blit(self.images['birdUpFlap'], (self.origin[0],player_pos[1])) #Bird  
+        self.renderPipes(player_pos,pipe_info) #Pipes
 
         #Actual Screen Update
         pygame.display.update()
