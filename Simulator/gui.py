@@ -9,7 +9,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame 
 
 class GUI:
-    def __init__(self,window_size,ground_level,pipe_info,pipe_gap,pipe_width):
+    def __init__(self,window_size,ground_level,pipe_info,pipe_gap,pipe_width,bird_size):
         pygame.init() #Simulation Begins
 
         #Params
@@ -18,6 +18,7 @@ class GUI:
         self.ground_level = ground_level #Elevation of Pipes
         self.window_size = window_size  #Window Size
         self.origin = [10,self.window_size[1]//2] #x-axis origin
+        self.bird_size = bird_size #Bird Size aka player size
 
         #Importing Images
         self.images  = {}
@@ -41,10 +42,14 @@ class GUI:
     def renderPipes(self,player_pos,pipe_info):
         for (xPos,yPos) in pipe_info:
             #Lower Pipe Creation
+            #lower pipe -> pipe_gap//2 units below ypos
+            #pipe start from xpos and ends at xPos + pipe_width
             lower_pipe_pos = (xPos-player_pos[0],yPos+self.pipe_gap//2) #Relative Position of Lower Pipe
             lower_pipe_size = (self.pipe_width, self.window_size[1] - self.ground_level - lower_pipe_pos[1])
 
             #Upper Pipe Creation
+            #upper pipe -> pipe_gap//2 units above ypos
+            #pipe start from xpos and ends at xPos + pipe_width
             upper_pipe_pos = (xPos-player_pos[0],0) #Relative Position of Upper Pipe
             upper_pipe_size = (self.pipe_width,yPos - self.pipe_gap//2)
 
@@ -58,7 +63,7 @@ class GUI:
         #Putting Objects on Screen
         self.window.blit(pygame.transform.scale(self.images["background"], self.window_size),(0,0)) #BackGround
         self.window.blit(pygame.transform.scale(self.images["base"],(self.window_size[0],self.ground_level)),(0,self.window_size[1]-self.ground_level)) #Base
-        self.window.blit(self.images['birdUpFlap'], (self.origin[0],player_pos[1])) #Bird  
+        self.window.blit(pygame.transform.scale(self.images["birdUpFlap"], (self.bird_size,self.bird_size)), (self.origin[0],player_pos[1])) #Bird  
         self.renderPipes(player_pos,pipe_info) #Pipes
 
         #Actual Screen Update

@@ -27,6 +27,7 @@ class Simulator :
         self.pipe_len = 20 # Min Pipe Len
         self.player_speed = 5 #Player Movement Speed
         self.gravity = 0.5 #Ingame Gravity
+        self.bird_size = 25 #Bird Size
 
         #Generating Pipes In Simulation Range
         self.pipesInfo = [] #No Pillar State
@@ -34,7 +35,7 @@ class Simulator :
         self.reset()
             
         #GUI Setup
-        self.gui = GUI(self.window_size,self.groundLevel,self.pipesInfo,self.hGap,self.pipe_width)
+        self.gui = GUI(self.window_size,self.groundLevel,self.pipesInfo,self.hGap,self.pipe_width,self.bird_size)
         print(f'Client{self.__address} : GUI Initalized')
     
     #Spawns a New Pipe Based on Previous Pipe
@@ -57,12 +58,49 @@ class Simulator :
     #Used at Start or When Game Ends
     def reset(self):
         self.player_pos = [10,self.window_size[1]//2] #Reseting Player's Position
-        self.pipesInfo = [(self.xGap,self.window_size[0]//2)] #Initial Pipe
+        self.pipesInfo = [(self.xGap,self.window_size[1]//2)] #Initial Pipe
 
         #Generating Initial Pipes Sequentially
         #pipe position = xGap,2*XGap,......n*XGap
         for _ in range(2*self.xGap,self.window_size[0],self.xGap):
            self.spawnNextPipe()
+
+    def detectCollision(self):
+        #Rect -> Top Left x, Top Left y, Width, Height
+        check_collision = lambda rect1, rect2 : (
+            rect1[0] < rect2[0] + rect2[2] and
+            rect1[0] + rect1[2] > rect2[0] and
+            rect1[1] < rect2[1] + rect2[3] and
+            rect1[1] + rect1[3] > rect2[1]
+        )
+
+        #Bird Rectangle
+        bird = [self.player_pos[0]-self.bird_size//2,self.player_pos[1]-self.bird_size//2,self.bird_size,self.bird_size]
+
+        #Pipe Rectangles
+        xPos,yPos = self.pipesInfo[0]
+
+        #lower pipe -> pipe_gap//2 units below ypos
+        #pipe start from xpos and ends at xPos + pipe_width
+        lx,ly = (xPos,yPos+self.hGap//2)
+        lw,lh = (self.pipe_width,self.window_size[1]-self.groundLevel-ly)
+        lowerPipe = [lx,ly,lw,lh]
+
+        #upper pipe -> pipe_gap//2 units above ypos
+        #pipe start from xpos and ends at xPos + pipe_width
+        ux,uy = (xPos,0) 
+        uw,uh = (self.pipe_width,yPos-self.hGap//2)
+        upperPipe = [ux,uy,uw,uh]
+
+        if check_collision(bird,lowerPipe) or check_collision(bird,upperPipe):
+            return True
+
+        #Floor Check : Simple Y-Value check if Enough
+        if self.player_pos[1] >= self.window_size[1]-self.groundLevel :
+            return True 
+
+
+        return False
 
     def update(self,action):
         self.player_pos[0] += self.player_speed #X-Axis Pos Update
@@ -86,9 +124,14 @@ class Simulator :
         if self.player_pos[0] - (self.pipesInfo[0][0] + self.pipe_width//2) >= self.origin[0]:
             self.pipesInfo.pop(0)
 
-        self.gui.update(self.player_pos,self.pipesInfo)
+        #Collision Check
+        #We reset the birds Position & Notify the Simulator for the same
+        if self.detectCollision():
+            self.reset()
+            print("Collision")
 
-        print(len(self.pipesInfo))
+        #Updating GUI
+        self.gui.update(self.player_pos,self.pipesInfo)
 
         return "state"
 
