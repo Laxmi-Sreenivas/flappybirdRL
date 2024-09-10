@@ -6,48 +6,44 @@
     - Update Existing Environment
 - Passes down Necessary Info to Simulator
 '''
+from connect import Socket
 from simulator import Simulator
-
-#Constants
-BUFFER_SIZE = 1024
-ENCODING = 'utf-8'
 
 class Manager:
     def __init__(self,client,address):
-        self.__client = client #Client Instance
-        self.__address = address #Client Address
-
+        self.__client = Socket(client,address) #wrapper Socket Instance
+        
     def __call__(self): #Called by Server
         level,flag = 0,True
 
         try :
             while flag: #Level Loop
-                info = self.__client.recv(BUFFER_SIZE).decode(ENCODING).split(',')
-                print(f'Client{self.__address} Executing Level-{level} with {info}')
+                info = self.__client.recv().split(',')
+                print(f'{self.__client} Executing Level-{level} with {info}')
 
                 #Environment Creation & Simulation
-                environment = Simulator(info)
-                flag = self.__simuationLoop(environment)
+                environment = Simulator(info,f'{self.__client}')
+                flag = self.__simulationLoop(environment)
                     
                 #Update Level
                 level += 1
 
         except Exception as e :
-            print(f'Bad request from client{self.__address}: {e}')
+            print(f'Bad request from {self.__client}: {e}')
 
         finally: 
             self.__client.close()
-            print(f'Connection with client{self.__address} closed')
+            print(f'Connection with {self.__client} closed')
         
 
     def __simulationLoop(self,environment):
         while True : 
-            actionType = self.__client.recv(BUFFER_SIZE).decode(ENCODING)
+            actionType = self.__client.recv() #Decide Move
 
             if actionType == "Continue":
-                action = self.__client.recv(BUFFER_SIZE).decode(ENCODING) #Fetch Action From Client
+                action = self.__client.recv() #Fetch Action From Client
                 state = environment.update(action) #Update State
-                self.__client.send(state.encode(ENCODING)) #Send Back the New State Info to Client
+                self.__client.sendall(state) #Send Back the New State Info to Client
             
             elif actionType == "Exit" : #Exit the Level Loop 
                 return False 
