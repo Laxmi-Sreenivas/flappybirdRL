@@ -30,9 +30,3 @@ class Socket:
     #For Printing Purposes
     def __str__(self) -> str:
         return f'Client{self.address}'
-
-
-    
-
-    
-    

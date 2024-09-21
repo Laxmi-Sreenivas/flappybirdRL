@@ -18,7 +18,7 @@ class Manager:
 
         try :
             while flag: #Level Loop
-                info = self.__client.recv().split(',')
+                info = self.__client.recv()
                 print(f'{self.__client} Executing Level-{level} with {info}')
 
                 #Environment Creation & Simulation

@@ -11,13 +11,15 @@ from gui import GUI
 import random
 import copy
 import config
+import json
 
 class Simulator :
     def __init__(self,info,address):
         self.__address = address
-        self.xGap = int(info[0]) #Spacing Across x Axis
-        self.yGap = int(info[1]) #Max Spacing Across y Axis
-        self.hGap = int(info[2]) #Hole Size between the Pipes
+        info = json.loads(info)
+        self.xGap = info["xGap"] #Spacing Across x Axis
+        self.yGap = info["yGap"] #Max Spacing Across y Axis
+        self.hGap = info["hGap"] #Hole Size between the Pipes
 
         print(f'Client{self.__address} : Simulation Begins')
         
@@ -95,9 +97,14 @@ class Simulator :
 
     def update(self,action):
         self.player_pos[0] += config.player_speed #X-Axis Pos Update
-        self.player_pos[1] += config.gravity #Y-Axis Pos Update
+        
+        #Y-Axis Pos Update
+        if action == "JUMP":
+            self.player_pos[1] -= config.player_jump 
+        if action == "FALL" :
+            self.player_pos[1] += config.gravity
 
-        #Similarly Adding new Pillar when in Reach
+        #Adding new Pillar when in Reach
         #Player Reach = player_pos  + window_size
         #Right End of Pipe = last pipe pos + xGap - pipe width//2
         #Right End of Pipe <= Player Reach 
