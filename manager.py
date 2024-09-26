@@ -7,7 +7,7 @@
 - Passes down Necessary Info to Simulator
 '''
 import Simulator
-from Simulator.connect import Socket
+from connect import Socket
 from Simulator.simulator import Simulator
 import json
 
