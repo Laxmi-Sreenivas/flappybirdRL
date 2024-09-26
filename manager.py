@@ -27,6 +27,8 @@ class Manager:
                 #Converting Info String to Json Before Sending
                 environment = Simulator(json.loads(info),f'{self.__client}')
                 flag = self.__simulationLoop(environment)
+
+                del environment
                     
                 #Update Level
                 level += 1
