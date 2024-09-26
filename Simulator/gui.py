@@ -7,8 +7,9 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide" 
 import pygame 
+
 import copy
-import config
+import Simulator.config as config
 
 class GUI:
     def __init__(self,pipe_info,pipe_gap):

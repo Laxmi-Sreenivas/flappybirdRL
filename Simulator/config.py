@@ -1,5 +1,5 @@
 '''
-- Stores All Environment Varibles of Simualation
+- Stores All Environment Varibles of Simulation
 '''
 window_size = (1000,600) #Simulation Window Size
 origin  = [10,window_size[1]//2] #xAxis Origin

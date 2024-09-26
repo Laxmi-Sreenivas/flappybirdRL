@@ -6,8 +6,9 @@
     - Update Existing Environment
 - Passes down Necessary Info to Simulator
 '''
-from connect import Socket
-from simulator import Simulator
+import Simulator
+from Simulator.connect import Socket
+from Simulator.simulator import Simulator
 
 class Manager:
     def __init__(self,client,address):

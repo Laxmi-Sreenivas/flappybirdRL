@@ -7,10 +7,10 @@
     - What the height difference of Pillars Should Be
     - How Big the Gap Should be 
 '''
-from gui import GUI
+from Simulator.gui import GUI
+import Simulator.config as config
 import random
 import copy
-import config
 import json
 
 class Simulator :
