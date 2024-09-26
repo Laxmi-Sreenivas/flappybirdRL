@@ -100,7 +100,10 @@ class Simulator :
         return False
 
     def update(self,action):
-        self.player_pos[0] += self.player_speed #X-Axis Pos Update
+        state = {"over" : False}
+
+        #X-Axis Pos Update
+        self.player_pos[0] += self.player_speed 
         
         #Y-Axis Pos Update
         if action == "JUMP":
@@ -130,12 +133,18 @@ class Simulator :
         #We reset the birds Position & Notify the Simulator for the same
         if self.detectCollision():
             self.reset()
+            state["over"] = True
             print(f'Client{self.__address} : Level Restart Due to Collision')
 
         #Updating GUI
         self.gui.update(self.player_pos,self.pipesInfo)
 
-        return "state"
+        #State Info
+        #Gives Relative Info of The Pipe Infront 
+        state["pos"] = [self.pipesInfo[0][0]-self.player_pos[0],
+                        self.pipesInfo[0][1]-self.player_pos[1]]
+
+        return json.dumps(state)
 
     #Graciously Closing Simulator
     def __del__(self):
