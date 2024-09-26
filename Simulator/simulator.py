@@ -17,9 +17,13 @@ class Simulator :
     def __init__(self,info,address):
         self.__address = address
         info = json.loads(info)
+
+        #Loading Simulator Level Info
         self.xGap = info["xGap"] #Spacing Across x Axis
         self.yGap = info["yGap"] #Max Spacing Across y Axis
         self.hGap = info["hGap"] #Hole Size between the Pipes
+        self.player_speed = info["xSpeed"] #Player Movement Speed
+        self.player_jump  = info["ySpeed"] #Player Jump Speed
 
         print(f'Client{self.__address} : Simulation Begins')
         
@@ -96,11 +100,11 @@ class Simulator :
         return False
 
     def update(self,action):
-        self.player_pos[0] += config.player_speed #X-Axis Pos Update
+        self.player_pos[0] += self.player_speed #X-Axis Pos Update
         
         #Y-Axis Pos Update
         if action == "JUMP":
-            self.player_pos[1] -= config.player_jump 
+            self.player_pos[1] -= self.player_jump 
         if action == "FALL" :
             self.player_pos[1] += config.gravity
 
