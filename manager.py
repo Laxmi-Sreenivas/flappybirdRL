@@ -9,6 +9,7 @@
 import Simulator
 from Simulator.connect import Socket
 from Simulator.simulator import Simulator
+import json
 
 class Manager:
     def __init__(self,client,address):
@@ -23,7 +24,8 @@ class Manager:
                 print(f'{self.__client} Executing Level-{level} with {info}')
 
                 #Environment Creation & Simulation
-                environment = Simulator(info,f'{self.__client}')
+                #Converting Info String to Json Before Sending
+                environment = Simulator(json.loads(info),f'{self.__client}')
                 flag = self.__simulationLoop(environment)
                     
                 #Update Level
@@ -44,7 +46,7 @@ class Manager:
             if actionType == "Continue":
                 action = self.__client.recv() #Fetch Action From Client
                 state = environment.update(action) #Update State
-                self.__client.sendall(state) #Send Back the New State Info to Client
+                self.__client.sendall(json.dumps(state)) #Send Back the New State Info [String] to Client
             
             elif actionType == "Exit" : #Exit the Level Loop 
                 return False 

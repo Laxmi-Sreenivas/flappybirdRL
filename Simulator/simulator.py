@@ -11,12 +11,10 @@ from Simulator.gui import GUI
 import Simulator.config as config
 import random
 import copy
-import json
 
 class Simulator :
     def __init__(self,info,address):
         self.__address = address
-        info = json.loads(info)
 
         #Loading Simulator Level Info
         self.xGap = info["xGap"] #Spacing Across x Axis
@@ -28,6 +26,7 @@ class Simulator :
         print(f'Client{self.__address} : Simulation Begins')
         
         #Generating Pipes In Simulation Range
+        self.score = 0 #No Pillar Crossed
         self.pipesInfo = [] #No Pillar State
         self.player_pos = copy.deepcopy(config.origin) # Default Position of Player [Used For Reset]
         self.reset()
@@ -55,6 +54,7 @@ class Simulator :
     #Resets Player Position
     #Used at Start or When Game Ends
     def reset(self):
+        self.score = 0 #Reseting Score
         self.player_pos = copy.deepcopy(config.origin) #Reseting Player's Position
         self.pipesInfo = [(self.xGap,config.window_size[1]//2)] #Initial Pipe
 
@@ -100,7 +100,7 @@ class Simulator :
         return False
 
     def update(self,action):
-        state = {"over" : False}
+        state = {"over" : False,"score" : 0}
 
         #X-Axis Pos Update
         self.player_pos[0] += self.player_speed 
@@ -128,6 +128,7 @@ class Simulator :
         #player pos - Left End > origin
         if self.player_pos[0] - (self.pipesInfo[0][0] + config.pipe_width//2) >= config.origin[0]:
             self.pipesInfo.pop(0)
+            state["score"] += 1 #Pipe Crossed
 
         #Collision Check
         #We reset the birds Position & Notify the Simulator for the same
@@ -144,7 +145,7 @@ class Simulator :
         state["pos"] = [self.pipesInfo[0][0]-self.player_pos[0],
                         self.pipesInfo[0][1]-self.player_pos[1]]
 
-        return json.dumps(state)
+        return state
 
     #Graciously Closing Simulator
     def __del__(self):
