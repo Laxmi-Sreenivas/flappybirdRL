@@ -13,8 +13,7 @@
 
 ## Demo
 <video width="600" controls>
-  <source src="./Simulator/demo.mov" type="video/mp4">
-  Your browser does not support the video tag.
+  <source src="https://github.com/user-attachments/assets/92d79e54-8abc-4abb-8abc-794c4a425771" type="video/mp4">
 </video>
 
 ## Setup
