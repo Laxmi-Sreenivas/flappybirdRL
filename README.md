@@ -12,7 +12,6 @@
 - [Credits](#credits)
 
 ## Demo
-![demo vid](https://github.com/user-attachments/assets/92d79e54-8abc-4abb-8abc-794c4a425771)
 <video src='https://github.com/user-attachments/assets/92d79e54-8abc-4abb-8abc-794c4a425771.mov' width=180/>
 
 ## Setup
