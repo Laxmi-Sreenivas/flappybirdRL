@@ -13,9 +13,7 @@
 
 ## Demo
 ![demo vid](https://github.com/user-attachments/assets/92d79e54-8abc-4abb-8abc-794c4a425771)
-<video width="600" controls>
-  <source src="https://github.com/user-attachments/assets/92d79e54-8abc-4abb-8abc-794c4a425771.mov" type="video/mp4">
-</video>
+<video src='https://github.com/user-attachments/assets/92d79e54-8abc-4abb-8abc-794c4a425771.mov' width=180/>
 
 ## Setup
 Creating conda environment
