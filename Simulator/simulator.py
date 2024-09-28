@@ -135,7 +135,6 @@ class Simulator :
         if self.detectCollision():
             self.reset()
             state["over"] = True
-            print(f'Client{self.__address} : Level Restart Due to Collision')
 
         #Updating GUI
         self.gui.update(self.player_pos,self.pipesInfo)
